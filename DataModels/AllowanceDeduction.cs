@@ -21,10 +21,10 @@ namespace PayrollProject.DataModels
         public string CalculationType { get; set; } = PayrollEnums.CalculationType.FixedAmount;
 
         [Column(TypeName = "decimal(5,2)")]
-        public decimal Percentage { get; set; }
+        public decimal? Percentage { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal FixedAmount { get; set; }
+        public decimal? FixedAmount { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime EffectiveFrom { get; set; }
