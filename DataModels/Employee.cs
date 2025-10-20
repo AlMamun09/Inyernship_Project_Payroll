@@ -36,7 +36,7 @@ namespace PayrollProject.DataModels
         [MaxLength(50)]
         public string? BankAccountNumber { get; set; }
 
-        public Guid ShiftId { get; set; }
+        public Guid? ShiftId { get; set; }
 
         [MaxLength(20)]
         public string Status { get; set; } = PayrollEnums.EmploymentStatus.Active;
