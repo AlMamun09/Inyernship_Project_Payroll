@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PayrollProject.DataModels;
 
 namespace PayrollProject.Data
 {
@@ -9,5 +10,12 @@ namespace PayrollProject.Data
             : base(options)
         {
         }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Shift> Shifts { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<Leave> Leaves { get; set; }
+        public DbSet<AllowanceDeduction> AllowanceDeductions { get; set; }
+        public DbSet<Payroll> Payrolls { get; set; }
+        public DbSet<SalarySlip> SalarySlips { get; set; }
     }
 }
