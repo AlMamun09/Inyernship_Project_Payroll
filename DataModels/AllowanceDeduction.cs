@@ -1,6 +1,4 @@
-﻿// In DataModels/AllowanceDeduction.cs
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using PayrollProject.Models;
 
