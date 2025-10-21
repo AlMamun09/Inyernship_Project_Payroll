@@ -1,3 +1,7 @@
+.main-header .navbar-nav.ml-auto .nav-link:hover {
+    color: #ffffff !important; /* Forces the text color to be white on hover */
+}
+
 html {
   font-size: 14px;
 }
