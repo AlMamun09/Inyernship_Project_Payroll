@@ -8,23 +8,11 @@ namespace PayrollProject.DataModels
     {
         [Key]
         public Guid EmployeeId { get; set; }
-
-        [Required, MaxLength(200)]
         public string FullName { get; set; } = string.Empty;
-
-        [MaxLength(20)]
         public string Gender { get; set; } = PayrollEnums.Gender.Male;
-
-        [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
-
-        [MaxLength(100)]
         public string? Designation { get; set; }
-
-        [MaxLength(100)]
         public string? Department { get; set; }
-
-        [DataType(DataType.Date)]
         public DateTime JoiningDate { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
