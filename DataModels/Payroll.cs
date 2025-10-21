@@ -15,7 +15,7 @@ namespace PayrollProject.DataModels
         public decimal TotalAllowances { get; set; }
         public decimal TotalDeductions { get; set; }
         public decimal NetSalary { get; set; }
-        public string PaymentStatus { get; set; } = PayrollEnums.PaymentStatus.Pending;
+        public string? PaymentStatus { get; set; }
         public DateTime? PaymentDate { get; set; }
     }
 }

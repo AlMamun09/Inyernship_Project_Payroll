@@ -12,7 +12,7 @@ namespace PayrollProject.DataModels
         public DateTime AttendanceDate { get; set; }
         public TimeSpan? InTime { get; set; }
         public TimeSpan? OutTime { get; set; }
-        public string Status { get; set; } = PayrollEnums.AttendanceStatus.Present;
+        public string? Status { get; set; }
         public decimal WorkingHours { get; set; }
     }
 }

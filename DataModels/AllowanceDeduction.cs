@@ -8,9 +8,9 @@ namespace PayrollProject.DataModels
     {
         [Key]
         public Guid ADId { get; set; }
-        public string ADType { get; set; } = PayrollEnums.ADType.Allowance;
+        public string? ADType { get; set; }
         public string ADName { get; set; } = string.Empty;
-        public string CalculationType { get; set; } = PayrollEnums.CalculationType.FixedAmount;
+        public string? CalculationType { get; set; }
         public decimal? Percentage { get; set; }
         public decimal? FixedAmount { get; set; }
         public DateTime EffectiveFrom { get; set; }
