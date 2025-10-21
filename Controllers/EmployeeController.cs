@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PayrollProject.Data;
 using PayrollProject.DataModels;
-using PayrollProject.ViewModel;
+using PayrollProject.ViewModel.EmployeeViewModels;
 
 namespace PayrollProject.Controllers
 {

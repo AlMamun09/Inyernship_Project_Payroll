@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PayrollProject.Data;
 using PayrollProject.DataModels;
-using PayrollProject.ViewModel;
+using PayrollProject.ViewModel.AllowanceDeductionViewModels;
 
 namespace PayrollProject.Controllers
 {
@@ -24,8 +24,8 @@ namespace PayrollProject.Controllers
             dataModel.ADType = viewModel.ADType;
             dataModel.ADName = viewModel.ADName;
             dataModel.CalculationType = viewModel.CalculationType;
-            dataModel.Percentage = viewModel.Percentage;
-            dataModel.FixedAmount = viewModel.FixedAmount;
+            dataModel.Percentage = viewModel.Percentage?? 0m;
+            dataModel.FixedAmount = viewModel.FixedAmount?? 0m;
             dataModel.EffectiveFrom = viewModel.EffectiveFrom;
             _context.AllowanceDeductions.Add(dataModel);
             _context.SaveChanges();
