@@ -21,8 +21,8 @@ namespace PayrollProject.Controllers
         public IActionResult Index(AllowanceDeductionVM viewModel)
         {
             var dataModel = new AllowanceDeduction();
-            dataModel.ADType = viewModel.ADType;
-            dataModel.ADName = viewModel.ADName;
+            dataModel.AllowanceDeductionType = viewModel.ADType;
+            dataModel.AllowanceDeductionName = viewModel.ADName;
             dataModel.CalculationType = viewModel.CalculationType;
             dataModel.Percentage = viewModel.Percentage?? 0m;
             dataModel.FixedAmount = viewModel.FixedAmount?? 0m;

@@ -25,6 +25,8 @@ builder.Services.AddDefaultIdentity<PayrollUser>(options =>
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<PayrollProject.Repositories.Interfaces.IEmployeeRepository, PayrollProject.Repositories.EmployeeRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

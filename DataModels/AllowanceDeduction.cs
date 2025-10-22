@@ -7,9 +7,9 @@ namespace PayrollProject.DataModels
     public class AllowanceDeduction
     {
         [Key]
-        public Guid ADId { get; set; }
-        public string? ADType { get; set; }
-        public string? ADName { get; set; }
+        public Guid AllowanceDeductionId { get; set; }
+        public string? AllowanceDeductionType { get; set; }
+        public string? AllowanceDeductionName { get; set; }
         public string? CalculationType { get; set; }
         public decimal Percentage { get; set; }
         public decimal FixedAmount { get; set; }
