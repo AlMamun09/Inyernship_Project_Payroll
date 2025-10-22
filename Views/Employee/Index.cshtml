@@ -1,0 +1,129 @@
+﻿@* Add reference to Employee View Model if needed for Tag Helpers, though not strictly required for this AJAX approach *@
+@model IEnumerable<PayrollProject.ViewModel.EmployeeViewModels.EmployeeVM>
+
+@{
+    ViewData["Title"] = "Employee Management";
+}
+
+@* Add AntiForgeryToken for AJAX POSTs (needed by common-ajax.js) *@
+@Html.AntiForgeryToken()
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-users me-2"></i>
+            @ViewData["Title"]
+        </h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-primary btn-sm" id="btnCreateEmployee">
+                <i class="fas fa-plus me-1"></i> Add New Employee
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="alertPlaceholder"></div>
+
+        <div class="table-responsive">
+            <table id="employeeTable" class="table table-bordered table-striped table-hover" style="width:100%">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Designation</th>
+                        <th>Department</th>
+                        <th>Joining Date</th>
+                        <th>Shift</th>
+                        <th>Basic Salary</th>
+                        <th>Status</th>
+                        <th style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* DataTable will populate this via AJAX *@
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@* Modal Placeholder - Content will be loaded dynamically via AJAX (no create/edit/details handlers wired) *@
+<div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        @* Larger modal for form *@
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="employeeModalLabel">Employee Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="employeeModalBody">
+                @* Partial View (_EmployeeFormPartial) content would be loaded here if handlers existed *@
+                <div class="text-center p-5"><i class="fas fa-spinner fa-spin fa-2x"></i> Loading...</div>
+            </div>
+            @* Modal footer is typically part of the loaded partial view (_EmployeeFormPartial) *@
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @* --- Required Libraries --- *@
+    @* DataTables CSS & JS *@
+    <link rel="stylesheet" href="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
+    <script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+
+    @* SweetAlert2 JS (CSS is usually included/injected by JS) *@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @* jQuery Validation (Needed for modal forms loaded via AJAX) *@
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    @* --- Include Common Custom Functions --- *@
+    <script src="~/js/common-datatables.js"></script>
+    <script>
+        $(document).ready(function () {
+            // --- Specific configurations for Employee DataTable ---
+            const employeeAjaxUrl = "@Url.Action("GetEmployeesJson", "Employee")";
+            const employeeColumns = [
+                 { data: "fullName", name: "FullName" }, // Added 'name' for potential server-side later
+                 { data: "designation", name: "Designation", defaultContent: "N/A" },
+                 { data: "department", name: "Department", defaultContent: "N/A" },
+                 {
+                     data: "joiningDate", name: "JoiningDate",
+                     render: function (data) {
+                         // Format date, handle nulls
+                         return data ? new Date(data).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : "N/A"; // Example: 01 Jan 2023
+                     }
+                 },
+                 { data: "shiftName", name: "ShiftName", defaultContent: "N/A" },
+                 {
+                     data: "basicSalary", name: "BasicSalary",
+                     render: $.fn.dataTable.render.number(',', '.', 2, '$ ') // Currency format
+                 },
+                 { data: "status", name: "Status" },
+                 {
+                     data: "employeeId", // ID used for actions
+                     className: "text-center",
+                     render: function (data, type, row) {
+                         var editUrl = `@Url.Action("Edit", "Employee")/${data}`; // URL for Edit (left in markup but no handler)
+                         var detailsUrl = `@Url.Action("Details", "Employee")/${data}`; // URL for Details (left in markup but no handler)
+                         var deleteId = data;
+                         var employeeName = row.fullName || 'this employee'; // For confirmation message
+
+                         // Action buttons are still rendered but there are no client handlers wired.
+                         return `<button type="button" class="btn btn-secondary btn-sm btn-edit-employee" data-url="${editUrl}" title="Edit"><i class="fas fa-pencil-alt"></i></button> ` +
+                                `<button type="button" class="btn btn-info btn-sm btn-details-employee ms-1" data-url="${detailsUrl}" title="Details"><i class="fas fa-info-circle"></i></button> ` +
+                                `<button type="button" class="btn btn-danger btn-sm ms-1 js-delete-employee" data-id="${deleteId}" data-name="${employeeName}" title="Delete"><i class="fas fa-trash"></i></button>`;
+                     },
+                     orderable: false,
+                     searchable: false
+                 }
+            ];
+
+            // --- Initialize DataTable using common function ---
+            var employeeTable = initializeDataTable('#employeeTable', employeeAjaxUrl, employeeColumns, {
+            });
+
+        });
+    </script>
+}

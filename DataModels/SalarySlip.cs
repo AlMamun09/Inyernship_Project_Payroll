@@ -6,7 +6,7 @@ namespace PayrollProject.DataModels
     public class SalarySlip
     {
         [Key]
-        public Guid SlipId { get; set; }
+        public Guid SalarySlipId { get; set; }
         public Guid PayrollId { get; set; }
         public Guid EmployeeId { get; set; }
         public int Month { get; set; }
