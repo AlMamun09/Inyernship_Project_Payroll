@@ -24086,9 +24086,7 @@ body.text-sm .input-group-text {
   color: #fff;
 }
 
-.dark-mode input:-webkit-autofill,
-.dark-mode input:-webkit-autofill:hover,
-.dark-mode input:-webkit-autofill:focus,
+
 .dark-mode textarea:-webkit-autofill,
 .dark-mode textarea:-webkit-autofill:hover,
 .dark-mode textarea:-webkit-autofill:focus,
