@@ -18,7 +18,7 @@ namespace PayrollProject.ViewModel.EmployeeViewModels
         [Required(ErrorMessage = "Date of Birth is required")]
         [DataType(DataType.Date)]
         [Display(Name = "Date of Birth")]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; } = DateTime.Today;
 
         [Required(ErrorMessage = "Designation is required")]
         public string? Designation { get; set; }
@@ -29,7 +29,7 @@ namespace PayrollProject.ViewModel.EmployeeViewModels
         [Required(ErrorMessage = "Joining Date is required")]
         [DataType(DataType.Date)]
         [Display(Name = "Joining Date")]
-        public DateTime JoiningDate { get; set; }
+        public DateTime JoiningDate { get; set; } = DateTime.Today;
 
         [Required(ErrorMessage = "Basic Salary is required")]
         [Range(0, double.MaxValue, ErrorMessage = "Basic Salary cannot be negative")]
