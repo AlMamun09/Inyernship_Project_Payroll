@@ -1,0 +1,112 @@
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<link rel="stylesheet" href="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
+<div class="card" id="employeeCard"
+     data-list-url="@Url.Action("GetEmployeesJson", "Employee")"
+     data-create-get="@Url.Action("Create", "Employee")"
+     data-edit-get-template="@Url.Action("Edit", "Employee")/"
+     data-details-template="@Url.Action("Details", "Employee")/"
+     data-delete-template="@Url.Action("Delete", "Employee")/">
+    <div class="card-header">
+        <h3 class="card-title m-0"><i class="fas fa-users mr-2"></i>Employees</h3>
+        <div class="card-tools">
+            <button id="btnAddEmployee" class="btn btn-primary"><i class="fas fa-plus"></i> Add Employee</button>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="employeeTable" class="table table-bordered table-hover w-100">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Designation</th>
+                    <th>Department</th>
+                    <th>Joining Date</th>
+                    <th>Shift</th>
+                    <th>Basic Salary</th>
+                    <th>Status</th>
+                    <th style="width:140px;" class="text-center">Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<!-- Hidden anti-forgery form to extract token for AJAX without forms -->
+<form id="__afForm" method="post" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
+<!-- Modal -->
+<div class="modal fade" id="employeeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <!-- dynamic form content loads here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/common-ajax.js"></script>
+    <script src="~/js/crud-modal.js"></script>
+    <script src="~/js/crud-datatable.js"></script>
+    <script>
+        window.__AntiForgeryToken = document.querySelector('#__afForm input[name="__RequestVerificationToken"]').value;
+        $(function(){
+        const $card = $('#employeeCard');
+        const listUrl = $card.data('list-url');
+        const routes = {
+        createGet: $card.data('create-get'),
+        editGet: (id) => $card.data('edit-get-template') + id,
+        details: (id) => $card.data('details-template') + id,
+        delete: (id) => $card.data('delete-template') + id
+        };
+
+        const empModal = CrudModal.init({
+        modalSelector: '#employeeModal',
+        addBtnSelector: '#btnAddEmployee',
+        routes,
+        createTitle: 'Create Employee',
+        editTitle: 'Edit Employee',
+        onSaved: () => empTable.reload()
+        });
+
+        const empTable = CrudTable.init({
+        tableSelector: '#employeeTable',
+        listUrl: listUrl,
+        idField: 'employeeId',
+        columns: [
+        { data: 'fullName' },
+        { data: 'designation' },
+        { data: 'department' },
+        { data: 'joiningDate', render: function (d) { if (!d) return ''; return new Date(d).toISOString().slice(0,10); } },
+        { data: 'shiftName' },
+        { data: 'basicSalary', render: function (v) { if (v == null) return ''; return new Intl.NumberFormat('en-BD', { style: 'currency', currency: 'BDT', maximumFractionDigits:2 }).format(v); } },
+        { data: 'status' }
+        ],
+        actions: {
+        editSelector: '.js-edit',
+        deleteSelector: '.js-delete',
+        renderButtons: (id, row) => `
+        <button class="btn btn-sm btn-warning mr-1 js-edit" data-id="${id}"><i class="fas fa-edit"></i></button>
+        <a class="btn btn-sm btn-info mr-1" href="${routes.details(id)}"><i class="fas fa-eye"></i></a>
+        <button class="btn btn-sm btn-danger js-delete" data-id="${id}"><i class="fas fa-trash"></i></button>
+        `,
+        onEdit: (id) => empModal.openEdit(id),
+        deleteUrl: (id) => routes.delete(id)
+        }
+        });
+        });
+    </script>
+}

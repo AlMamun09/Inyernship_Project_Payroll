@@ -1,0 +1,99 @@
+@model PayrollProject.ViewModel.EmployeeViewModels.EmployeeVM
+@{
+    Layout = null;
+    ViewData["Title"] = ViewBag?.Title ?? "Employee";
+    var shifts = ViewBag?.Shifts as IEnumerable<PayrollProject.DataModels.Shift> ?? Enumerable.Empty<PayrollProject.DataModels.Shift>();
+    var formAction = ViewBag?.FormAction as string ?? Url.Action("Create", "Employee");
+}
+
+<div class="p-3">
+    <form id="employeeForm" method="post" action="@formAction">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="EmployeeId" />
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="FullName" class="control-label"></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="Gender" class="control-label"></label>
+                        <select asp-for="Gender" class="form-control">
+                            <option value="">-- Select --</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="DateOfBirth" class="control-label"></label>
+                        <input asp-for="DateOfBirth" type="date" class="form-control" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="Designation" class="control-label"></label>
+                        <input asp-for="Designation" class="form-control" />
+                        <span asp-validation-for="Designation" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="Department" class="control-label"></label>
+                        <input asp-for="Department" class="form-control" />
+                        <span asp-validation-for="Department" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="JoiningDate" class="control-label"></label>
+                        <input asp-for="JoiningDate" type="date" class="form-control" />
+                        <span asp-validation-for="JoiningDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="BasicSalary" class="control-label"></label>
+                        <input asp-for="BasicSalary" class="form-control" />
+                        <span asp-validation-for="BasicSalary" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="EmploymentType" class="control-label"></label>
+                        <select asp-for="EmploymentType" class="form-control">
+                            <option>Full-Time</option>
+                            <option>Part-Time</option>
+                            <option>Contract</option>
+                        </select>
+                        <span asp-validation-for="EmploymentType" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="BankAccountNumber" class="control-label"></label>
+                        <input asp-for="BankAccountNumber" class="form-control" />
+                        <span asp-validation-for="BankAccountNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="ShiftId" class="control-label"></label>
+                        <select asp-for="ShiftId" class="form-control">
+                            <option value="">-- None --</option>
+                            @foreach (var s in shifts)
+                            {
+                                <option value="@s.ShiftId">@s.ShiftName</option>
+                            }
+                        </select>
+                        <span asp-validation-for="ShiftId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Status" class="control-label"></label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
