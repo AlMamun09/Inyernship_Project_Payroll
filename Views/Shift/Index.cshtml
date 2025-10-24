@@ -1,0 +1,139 @@
+﻿@{
+    ViewData["Title"] = "Shifts";
+}
+
+<link rel="stylesheet" href="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
+
+<div class="card" id="shiftCard"
+     data-list-url="@Url.Action("GetShiftsJson", "Shift")"
+     data-create-get="@Url.Action("Create", "Shift")"
+     data-edit-get-template="@Url.Action("Edit", "Shift")/"
+     data-details-template="@Url.Action("Details", "Shift")/"
+     data-delete-template="@Url.Action("Delete", "Shift")/">
+
+    <div class="card-header">
+        <h3 class="card-title m-0">
+            <i class="fas fa-clock mr-2"></i>Shifts
+        </h3>
+        <div class="card-tools">
+            <button id="btnAddShift" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Shift
+            </button>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table id="shiftTable" class="table table-bordered table-hover w-100">
+            <thead>
+                <tr>
+                    <th>Shift Name</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Status</th>
+                    <th style="width:140px;" class="text-center">Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<!-- Hidden anti-forgery form to extract token for AJAX without forms -->
+<form id="__afForm" method="post" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
+<!-- Modal -->
+<div class="modal fade" id="shiftModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Shift</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <!-- dynamic form content loads here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/common-ajax.js"></script>
+    <script src="~/js/crud-modal.js"></script>
+    <script src="~/js/crud-datatable.js"></script>
+
+    <script>
+        window.__AntiForgeryToken = document.querySelector('#__afForm input[name="__RequestVerificationToken"]').value;
+
+        $(function () {
+            const $card = $('#shiftCard');
+            const listUrl = $card.data('list-url');
+
+            const routes = {
+                createGet: $card.data('create-get'),
+                editGet: (id) => $card.data('edit-get-template') + id,
+                details: (id) => $card.data('details-template') + id,
+                delete: (id) => $card.data('delete-template') + id
+            };
+
+            const shiftModal = CrudModal.init({
+                modalSelector: '#shiftModal',
+                addBtnSelector: '#btnAddShift',
+                routes,
+                createTitle: 'Create Shift',
+                editTitle: 'Edit Shift',
+                onSaved: () => shiftTable.reload()
+            });
+
+            const shiftTable = CrudTable.init({
+                tableSelector: '#shiftTable',
+                listUrl: listUrl,
+                idField: 'shiftId',
+                columns: [
+                    { data: 'shiftName' },
+                    {
+                        data: 'startTime',
+                        render: function (d) {
+                            if (!d) return '';
+                            return new Date('2000-01-01T' + d).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        }
+                    },
+                    {
+                        data: 'endTime',
+                        render: function (d) {
+                            if (!d) return '';
+                            return new Date('2000-01-01T' + d).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        }
+                    },
+                    {
+                        data: 'isActive',
+                        render: function (d) {
+                            return d ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-secondary">Inactive</span>';
+                        }
+                    }
+                ],
+                actions: {
+                    editSelector: '.js-edit',
+                    deleteSelector: '.js-delete',
+                    renderButtons: (id, row) => `
+                        <button class="btn btn-sm btn-warning mr-1 js-edit" data-id="${id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <a class="btn btn-sm btn-info mr-1" href="${routes.details(id)}">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger js-delete" data-id="${id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `,
+                    onEdit: (id) => shiftModal.openEdit(id),
+                    deleteUrl: (id) => routes.delete(id)
+                }
+            });
+        });
+    </script>
+}
