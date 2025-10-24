@@ -1,0 +1,69 @@
+﻿@model PayrollProject.ViewModel.AttendanceViewModels.AttendanceVM
+@{
+    Layout = null;
+    ViewData["Title"] = ViewBag?.Title ?? "Attendance";
+    var employees = ViewBag?.Employees as IEnumerable<PayrollProject.DataModels.Employee> ?? Enumerable.Empty<PayrollProject.DataModels.Employee>();
+    var formAction = ViewBag?.FormAction as string ?? Url.Action("Create", "Attendance");
+}
+
+<div class="p-3">
+    <form id="attendanceForm" method="post" action="@formAction">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="AttendanceId" />
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="EmployeeId" class="control-label"></label>
+                        <select asp-for="EmployeeId" class="form-control">
+                            <option value="">-- Select Employee --</option>
+                            @foreach (var emp in employees)
+                            {
+                                <option value="@emp.EmployeeId">@emp.FullName</option>
+                            }
+                        </select>
+                        <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="AttendanceDate" class="control-label"></label>
+                        <input asp-for="AttendanceDate" type="date" class="form-control" />
+                        <span asp-validation-for="AttendanceDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="InTime" class="control-label"></label>
+                        <input asp-for="InTime" type="time" class="form-control" />
+                        <span asp-validation-for="InTime" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="OutTime" class="control-label"></label>
+                        <input asp-for="OutTime" type="time" class="form-control" />
+                        <span asp-validation-for="OutTime" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="Status" class="control-label"></label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="">-- Select Status --</option>
+                            <option value="Present">Present</option>
+                            <option value="Absent">Absent</option>
+                            <option value="Leave">Leave</option>
+                            <option value="Holiday">Holiday</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="WorkingHours" class="control-label"></label>
+                        <input asp-for="WorkingHours" class="form-control" />
+                        <span asp-validation-for="WorkingHours" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
