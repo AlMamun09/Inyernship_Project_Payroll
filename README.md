@@ -1,98 +1,101 @@
-Payroll Project: Phased Task Plan
-=================================
+Payroll Project
+==============
 
-This plan is structured in two distinct phases. Phase 1 is a joint effort to build the project's foundation and database schema. Phase 2 enables parallel, independent work on the core application features.
+Project Overview
+- Stack: ASP.NET Core (.NET9), Razor Pages + MVC controllers, Entity Framework Core, ASP.NET Core Identity, SQL Server, jQuery DataTables, SweetAlert2, Bootstrap.
+- Goal: HR and Finance workflows for Employee, Shift, Attendance, Leave, Allowance/Deduction, Payroll, and Salary Slip.
 
-**Core Strategy: Foundation First, Then Parallel Development**Both team members will first collaborate to create and deploy the complete database schema. With the database and all models in place, you can then split the work to build the application's features in parallel, working against the same shared database.
+Current Status (Progress)
+- Phase1 (Foundation) complete
+ - Solution set up, DB connection configured.
+ - All7 core entity models created and added to `ApplicationDbContext`:
+ - `Employee`, `Shift`, `Attendance`, `Leave`, `AllowanceDeduction`, `Payroll`, `SalarySlip`.
+ - Initial and subsequent migrations added and applied.
+ - Identity scaffolding added (login/register); role setup pending.
+- Phase2 (Features) in progress
+ - Employee module implemented end-to-end with reusable front-end CRUD components.
+ - Generic, reusable front-end scripts introduced:
+ - `wwwroot/js/crud-datatable.js` – wraps DataTables for generic list actions.
+ - `wwwroot/js/crud-modal.js` – generic modal loader and submitter for Create/Edit.
+ - Shared AJAX helpers:
+ - `wwwroot/js/common-ajax.js` – GET/POST wrappers, confirm/toasts, anti-forgery header injection.
 
-### **Phase 1: Foundation & Model Creation (Joint Task)**
+Employee Module (Delivered)
+- Controller: `Controllers/EmployeeController.cs`
+ - List: `GET /Employee/GetEmployeesJson` returns `{ data: [...] }` for DataTables.
+ - Create: 
+ - `GET /Employee/Create` renders the form (as a modal body).
+ - `POST /Employee/Create` validates and returns JSON `{ success, message }`.
+ - Edit:
+ - `GET /Employee/Edit/{id}` reuses the Create view with populated data.
+ - `POST /Employee/Edit` validates and returns JSON `{ success, message }`.
+ - Details: `GET /Employee/Details/{id}` renders a full view.
+ - Delete: `POST /Employee/Delete/{id}` returns JSON `{ success, message }`.
+- Views:
+ - List: `Views/Employee/Index.cshtml` uses `CrudTable` + `CrudModal` and page data-attributes for routes.
+ - Form: `Views/Employee/Create.cshtml` (Layout = null) rendered into the modal body.
+ - Details: `Views/Employee/Details.cshtml` – professional card layout with formatted Taka amounts.
+- Front-end flow
+ - DataTables fetches employees via `GetEmployeesJson` and renders columns (dates formatted, Taka currency for salary).
+ - Add/Edit load the form into a Bootstrap modal; submit via AJAX; success toast; table reload.
+ - Delete confirms via SweetAlert; posts with anti-forgery header; reloads on success.
 
-This initial phase is a sequential effort to be completed by both members before feature development begins. The goal is to have a fully functional project base with a complete database schema.
+Reusable CRUD Front-end (How to use for any module)
+- Files
+ - `wwwroot/js/crud-datatable.js` exposes `CrudTable.init(options)`
+ - Required options: `tableSelector`, `listUrl`, `columns`.
+ - Optional: `idField` (default `id`), `actions` ({ `renderButtons`, `editSelector`, `deleteSelector`, `onEdit(id)`, `deleteUrl(id)` }), `dataSrc` (default `data`), `dataTables` (extra DT options), `onReload`.
+ - `wwwroot/js/crud-modal.js` exposes `CrudModal.init(options)`
+ - Required: `modalSelector`, `routes` ({ `createGet`, `editGet(id)` })
+ - Optional: `addBtnSelector`, `createTitle`, `editTitle`, `onSaved(resp)`.
+- Patterns to follow
+ - List endpoint should return `{ data: [...] }`.
+ - Create/Edit POST should return JSON `{ success, message }` for consistent UX.
+ - Use anti-forgery token – the page sets `window.__AntiForgeryToken`; `CommonAjax` sends `RequestVerificationToken` automatically.
+ - Provide module routes to the page via data- attributes or a small `routes` object.
 
-**Key Tasks:**
+Setup & Run
+- Prerequisites: .NET9 SDK, SQL Server.
+- Configure DB: set connection string in `appsettings.json`.
+- Apply migrations and run the app in your preferred environment.
 
-1.  **Project & Repo Setup (Member 1):**
-    
-    *   Create the initial ASP.NET Core MVC project in Visual Studio.
-        
-    *   Set up the GitHub repository and establish a branching strategy (main, develop).
-        
-    *   Configure the SQL Server database connection string.
-        
-2.  **Create All 7 Entity Models (Joint Effort):**
-    
-    *   Together, define and create the C# entity classes for all 7 models: Employee, Shift, Attendance, Leave, AllowanceDeduction, Payroll, and SalarySlip.
-        
-    *   **Crucial:** Agree on all properties, data types, and relationships (foreign keys) during this step.
-        
-3.  **Set Up Database Context (Joint Effort):**
-    
-    *   Create the ApplicationDbContext class.
-        
-    *   Add DbSet properties for all 7 models.
-        
-    *   Configure any necessary relationships using Fluent API.
-        
-4.  **Initial Database Migration (Member 1):**
-    
-    *   Run the add-migration and update-database commands to generate the initial SQL schema with all 7 tables.
-        
-    *   Push the final project base with all models and the migration file to the develop branch.
-        
+Roadmap (Upcoming Work)
+- HR Module
+ - Shift Management: CRUD with `CrudTable`/`CrudModal`.
+ - Attendance Management: Daily entries, summaries, and validations.
+ - Leave Management: CRUD, policies, and balances.
+ - Role-based access for "HR Admin"; secure pages and actions.
+- Finance Module
+ - Allowance/Deduction Management: CRUD and categories.
+ - PayrollService: Core salary calculation engine pulling real data (employee, attendance, leave, allowances/deductions), proration, and tax rules.
+ - Payroll Processing UI: run for period, preview, approve.
+ - Salary Slip Generation: HTML/PDF output and archive.
+ - Role-based access for "Finance Admin".
+- Cross-Cutting
+ - Seed roles and default admin users; wiring Identity to pages.
+ - Client-side validation inside modals (optionally parse unobtrusive validation on modal load).
+ - Unit tests for `PayrollService` and key repositories.
+ - Logging/telemetry and error-handling improvements.
 
-**Milestone for Completion:** The project is on GitHub, and a successful database migration has created all 7 required tables in the SQL Server database.
+Conventions & Notes
+- JSON formats
+ - Lists: `{ data: [...] }`
+ - Mutations: `{ success: bool, message: string }`
+- Anti-forgery
+ - Send `RequestVerificationToken` header on POST; provided by `CommonAjax`.
+- Formatting
+ - Dates rendered in UI as `yyyy-MM-dd`.
+ - Currency: Taka via `Intl.NumberFormat('en-BD', { style: 'currency', currency: 'BDT' })`.
+- File Map
+ - Controllers: `Controllers/*Controller.cs`
+ - Views: `Views/<Module>/*`
+ - ViewModels: `ViewModel/*`
+ - Data Models: `DataModels/*`
+ - DbContext: `Data/ApplicationDbContext.cs`
+ - Migrations: `Data/Migrations/*`
+ - Reusable JS: `wwwroot/js/crud-datatable.js`, `wwwroot/js/crud-modal.js`, `wwwroot/js/common-ajax.js`
 
-### **Phase 2: Parallel Feature Development**
-
-With the foundation complete, you can now work in parallel on your assigned modules.
-
-#### **Member 1 (Team Lead): HR Module Development**
-
-Focuses on the user interface and business logic for managing employees and their time-related data.
-
-**Modules Owned:**
-
-*   Employee Management
-    
-*   Shift Management
-    
-*   Attendance Management
-    
-*   Leave Management
-    
-
-**Key Tasks:**
-
-1.  Create a feature/hr-module branch from develop.
-    
-2.  Implement login, registration, and role management for an "HR Admin" role using ASP.NET Core Identity.
-    
-3.  Build the MVC Controllers, Views, and business logic (CRUD operations) for the four modules assigned to you.
-    
-4.  Develop any necessary reports related to HR data (e.g., attendance summary).
-    
-
-#### **Member 2: Finance Module Development**
-
-Focuses on the financial setup, the core calculation engine, and generating the final pay slips.
-
-**Modules Owned:**
-
-*   AllowanceDeduction Management
-    
-*   Payroll Processing
-    
-*   SalarySlip Generation
-    
-
-**Key Tasks:**
-
-1.  Create a feature/finance-module branch from develop.
-    
-2.  Implement login and registration for a "Finance Admin" role.
-    
-3.  Build the MVC Controllers and Views for managing Allowances and Deductions.
-    
-4.  Create the core PayrollService containing the main salary calculation logic. This service will use the real ApplicationDbContext to fetch employee, attendance, and leave data.
-    
-5.  Develop the functionality to run the payroll for a given period, process calculations, and generate salary slips.
+Contributing Workflow
+- Branching: `main` (stable), `develop` (integration), feature branches per module.
+- Code style: keep controller JSON responses and DataTables contracts consistent.
+- Prefer reusing the generic CRUD front-end for all list/form pages to accelerate delivery.

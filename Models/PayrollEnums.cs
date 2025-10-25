@@ -45,7 +45,7 @@
             public const string Unpaid = "Unpaid";
         }
 
-        public static class ADType
+        public static class AllowanceDeductionType
         {
             public const string Allowance = "Allowance";
             public const string Deduction = "Deduction";
