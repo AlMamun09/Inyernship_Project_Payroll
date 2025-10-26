@@ -36,6 +36,7 @@ namespace PayrollProject.Controllers
                 var employeeVMs = employees.Select(e => new EmployeeVM
                 {
                     EmployeeId = e.EmployeeId,
+                    EmployeeCode = e.EmployeeCode,
                     FullName = e.FullName,
                     Designation = e.Designation,
                     Department = e.Department,
@@ -80,6 +81,11 @@ namespace PayrollProject.Controllers
 
             var entity = MapToEntity(model);
             entity.EmployeeId = Guid.NewGuid();
+
+            var lastNumericId = await _employeeRepository.GetMaxEmployeeNumericIdAsync();
+            var newNumericId = lastNumericId + 1;
+            entity.EmployeeNumericId = newNumericId;
+            entity.EmployeeCode = $"EMP {newNumericId.ToString("D3")}";
 
             await _employeeRepository.AddEmployeeAsync(entity);
             return Json(new { success = true, message = "Employee added successfully!" });
@@ -176,6 +182,7 @@ namespace PayrollProject.Controllers
             return new Employee
             {
                 EmployeeId = vm.EmployeeId,
+                EmployeeCode = vm.EmployeeCode,
                 FullName = vm.FullName,
                 Gender = vm.Gender,
                 DateOfBirth = vm.DateOfBirth,
@@ -195,6 +202,7 @@ namespace PayrollProject.Controllers
             return new EmployeeVM
             {
                 EmployeeId = e.EmployeeId,
+                EmployeeCode = e.EmployeeCode,
                 FullName = e.FullName,
                 Gender = e.Gender,
                 DateOfBirth = e.DateOfBirth,

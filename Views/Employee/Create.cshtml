@@ -1,6 +1,5 @@
 @model PayrollProject.ViewModel.EmployeeViewModels.EmployeeVM
 @{
-    Layout = null;
     ViewData["Title"] = ViewBag?.Title ?? "Employee";
     var shifts = ViewBag?.Shifts as IEnumerable<PayrollProject.DataModels.Shift> ?? Enumerable.Empty<PayrollProject.DataModels.Shift>();
     var formAction = ViewBag?.FormAction as string ?? Url.Action("Create", "Employee");
@@ -11,9 +10,26 @@
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="EmployeeId" />
         <div class="card mb-0">
+            <div class="card-header">
+                <h3 class="card-title m-0">
+                    <i class="fas fa-user-plus mr-2"></i>@ViewData["Title"]
+                </h3>
+                <div class="card-tools">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to List
+                    </a>
+                </div>
+            </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="form-group col-md-6">
+                    @if (Model.EmployeeId != Guid.Empty)
+                    {
+                        <div class="form-group col-md-3">
+                            <label asp-for="EmployeeCode" class="control-label"></label>
+                            <input asp-for="EmployeeCode" class="form-control" readonly />
+                        </div>
+                    }
+                    <div class="form-group @(Model.EmployeeId != Guid.Empty ? "col-md-3" : "col-md-6")">
                         <label asp-for="FullName" class="control-label"></label>
                         <input asp-for="FullName" class="form-control" />
                         <span asp-validation-for="FullName" class="text-danger"></span>
@@ -96,4 +112,43 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(function () {
+            // Find the anti-forgery token on the page and store it for AJAX
+            var tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (tokenInput) {
+                window.__AntiForgeryToken = tokenInput.value;
+            }
+
+            $('#employeeForm').on('submit', function (e) {
+                e.preventDefault(); // Stop the normal (non-AJAX) form submit
+
+                var $form = $(this);
+
+                // Manually trigger client-side validation
+                if (!$form.valid()) {
+                    return; // Don't submit if validation fails
+                }
+
+                var url = $form.attr('action');
+                var data = $form.serialize();
+
+                // Use your global CommonAjax function to post the form
+                CommonAjax.ajaxPost(url, data)
+                    .done(function (resp) {
+                        // Show success message
+                        CommonAjax.toastSuccess(resp.message || 'Saved successfully!')
+                            .then(() => {
+                                // Redirect back to the employee list
+                                window.location.href = '@Url.Action("Index", "Employee")';
+                            });
+                    })
+                    .fail(function (xhr) {
+                        // Show error message
+                        CommonAjax.toastError(xhr.responseJSON?.message || 'An error occurred.');
+                    });
+            });
+        });
+    </script>
 }

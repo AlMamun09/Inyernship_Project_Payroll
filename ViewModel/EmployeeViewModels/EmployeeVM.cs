@@ -7,6 +7,9 @@ namespace PayrollProject.ViewModel.EmployeeViewModels
     {
         public Guid EmployeeId { get; set; }
 
+        [Display(Name = "Employee ID")]
+        public string? EmployeeCode { get; set; }
+
         [Required(ErrorMessage = "Full Name is required")]
         [StringLength(100, ErrorMessage = "Full Name cannot exceed 50 characters")]
         [Display(Name = "Full Name")]
