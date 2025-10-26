@@ -25,6 +25,12 @@ namespace PayrollProject.Repositories
             return await _context.Employees.FindAsync(employeeId);
         }
 
+        public async Task<int> GetMaxEmployeeNumericIdAsync()
+        {
+            return await _context.Employees.AnyAsync()
+                ? await _context.Employees.MaxAsync(e=> e.EmployeeNumericId) : 0;
+        }
+
         public async Task AddEmployeeAsync(Employee employee)
         {
             await _context.Employees.AddAsync(employee);

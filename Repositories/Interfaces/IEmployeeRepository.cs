@@ -7,6 +7,7 @@ namespace PayrollProject.Repositories.Interfaces
     {
         Task<IEnumerable<Employee>> GetAllEmployeesAsync();
         Task<Employee?> GetEmployeeByIdAsync(Guid employeeId);
+        Task<int> GetMaxEmployeeNumericIdAsync();
         Task AddEmployeeAsync (Employee employee);
         Task UpdateEmployeeAsync(Employee employee);
         Task DeleteEmployeeAsync(Guid employeeId);

@@ -8,6 +8,8 @@ namespace PayrollProject.DataModels
     {
         [Key]
         public Guid EmployeeId { get; set; }
+        public int EmployeeNumericId { get; set; }
+        public string? EmployeeCode { get; set; }
         public Guid? ShiftId { get; set; }
         public string? FullName { get; set; }
         public string? Gender { get; set; }
