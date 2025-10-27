@@ -95,22 +95,11 @@ namespace PayrollProject.Controllers
                 return NotFound();
             }
 
-            var entity = MapToEntity(departmentVM);
-            await _departmentRepository.UpdateDepartmentAsync(entity);
+            existing.DepartmentName = departmentVM.DepartmentName;
+            existing.IsActive = departmentVM.IsActive;
+
+            await _departmentRepository.UpdateDepartmentAsync(existing);
             return Json(new { success = true, message = "Department updated successfully" });
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var department = await _departmentRepository.GetDepartmentsByIdAsync(id);
-            if(department == null)
-            {
-                return NotFound();
-            }
-
-            var vm = MapToVM(department);
-            return View(vm);
         }
 
         [HttpPost]
