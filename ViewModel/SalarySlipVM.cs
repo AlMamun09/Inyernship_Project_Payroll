@@ -1,4 +1,4 @@
-﻿namespace PayrollProject.ViewModel.SalarySlipViewModels
+﻿namespace PayrollProject.ViewModel
 {
     public class SalarySlipVM
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PayrollProject.ViewModel.LeaveViewModels
+namespace PayrollProject.ViewModel
 {
     public class LeaveVM
     {

@@ -1,4 +1,4 @@
-﻿namespace PayrollProject.ViewModel.PayrollViewModels
+﻿namespace PayrollProject.ViewModel
 {
     public class PayrollVM
     {

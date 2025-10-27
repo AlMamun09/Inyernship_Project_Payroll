@@ -1,4 +1,4 @@
-﻿namespace PayrollProject.ViewModel.AllowanceDeductionViewModels
+﻿namespace PayrollProject.ViewModel
 {
     public class AllowanceDeductionVM
     {

@@ -18,5 +18,7 @@ namespace PayrollProject.Data
         public DbSet<AllowanceDeduction> AllowanceDeductions { get; set; }
         public DbSet<Payroll> Payrolls { get; set; }
         public DbSet<SalarySlip> SalarySlips { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Designation> Designations { get; set; }
     }
 }

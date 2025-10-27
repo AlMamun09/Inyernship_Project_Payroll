@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PayrollProject.Data;
 using PayrollProject.DataModels;
 using PayrollProject.Repositories.Interfaces;
-using PayrollProject.ViewModel.EmployeeViewModels;
+using PayrollProject.ViewModel;
 
 namespace PayrollProject.Controllers
 {

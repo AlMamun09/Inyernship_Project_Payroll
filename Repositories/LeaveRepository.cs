@@ -2,7 +2,7 @@
 using PayrollProject.Data;
 using PayrollProject.DataModels;
 using PayrollProject.Repositories.Interfaces;
-using PayrollProject.ViewModel.LeaveViewModels;
+using PayrollProject.ViewModel;
 namespace PayrollProject.Repositories
 {
     public class LeaveRepository : ILeaveRepository

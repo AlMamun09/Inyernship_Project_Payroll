@@ -1,5 +1,5 @@
 ﻿using PayrollProject.DataModels;
-using PayrollProject.ViewModel.ShiftViewModels;
+using PayrollProject.ViewModel;
 namespace PayrollProject.Repositories.Interfaces
 {
     public interface IShiftRepository

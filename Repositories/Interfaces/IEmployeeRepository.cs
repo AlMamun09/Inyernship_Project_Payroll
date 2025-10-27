@@ -1,5 +1,5 @@
 ﻿using PayrollProject.DataModels;
-using PayrollProject.ViewModel.EmployeeViewModels;
+using PayrollProject.ViewModel;
 
 namespace PayrollProject.Repositories.Interfaces
 {
