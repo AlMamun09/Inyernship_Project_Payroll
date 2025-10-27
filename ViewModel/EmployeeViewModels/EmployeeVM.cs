@@ -43,6 +43,20 @@ namespace PayrollProject.ViewModel.EmployeeViewModels
         [Display(Name = "Employment Type")]
         public string? EmploymentType { get; set; }
 
+        [Display(Name = "Payment System")]
+        public string? PaymentSystem { get; set; }
+
+        [Display(Name = "Account Holder Name")]
+        public string? AccountHolderName { get; set; }
+
+        [Display(Name = "Bank and Branch Name")]
+        public string? BankAndBranchName { get; set; }
+
+        [Display(Name = "Mobile Number")]
+        [Phone] 
+        public string? MobileNumber { get; set; }
+
+        [Required]
         [StringLength(50, ErrorMessage = "Bank Account Number cannot exceed 50 characters")]
         [Display(Name = "Bank Account Number")]
         public string? BankAccountNumber { get; set; }
