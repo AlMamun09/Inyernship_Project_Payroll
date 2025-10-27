@@ -73,6 +73,11 @@ namespace PayrollProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] EmployeeVM model)
         {
+            if (model.DateOfBirth.AddYears(18) > model.JoiningDate)
+            {
+                ModelState.AddModelError(nameof(model.JoiningDate),
+                    "Employee must be 18 or older at the time of joining.");
+            }
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray();
@@ -129,7 +134,6 @@ namespace PayrollProject.Controllers
             existing.JoiningDate = model.JoiningDate;
             existing.BasicSalary = model.BasicSalary;
             existing.EmploymentType = model.EmploymentType;
-            existing.BankAccountNumber = model.BankAccountNumber;
             existing.ShiftId = model.ShiftId;
             existing.Status = model.Status;
 
@@ -190,8 +194,12 @@ namespace PayrollProject.Controllers
                 Department = vm.Department,
                 JoiningDate = vm.JoiningDate,
                 BasicSalary = vm.BasicSalary,
-                EmploymentType = vm.EmploymentType,
+                PaymentSystem = vm.PaymentSystem,
+                AccountHolderName = vm.AccountHolderName,
+                BankAndBranchName = vm.BankAndBranchName,
                 BankAccountNumber = vm.BankAccountNumber,
+                MobileNumber = vm.MobileNumber,
+                EmploymentType = vm.EmploymentType,
                 ShiftId = vm.ShiftId,
                 Status = vm.Status
             };
@@ -210,8 +218,12 @@ namespace PayrollProject.Controllers
                 Department = e.Department,
                 JoiningDate = e.JoiningDate,
                 BasicSalary = e.BasicSalary,
-                EmploymentType = e.EmploymentType,
+                PaymentSystem = e.PaymentSystem,
+                AccountHolderName = e.AccountHolderName,
+                BankAndBranchName = e.BankAndBranchName,
                 BankAccountNumber = e.BankAccountNumber,
+                MobileNumber = e.MobileNumber,
+                EmploymentType = e.EmploymentType,
                 ShiftId = e.ShiftId,
                 Status = e.Status
             };

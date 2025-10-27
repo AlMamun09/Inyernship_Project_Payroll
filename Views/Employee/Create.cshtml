@@ -45,7 +45,12 @@
                     </div>
                     <div class="form-group col-md-3">
                         <label asp-for="DateOfBirth" class="control-label"></label>
-                        <input asp-for="DateOfBirth" type="date" class="form-control" />
+                        <div class="input-group">
+                            <input asp-for="DateOfBirth" type="date" class="form-control" />
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="ageDisplay" style="width: 60px;">--</span>
+                            </div>
+                        </div>
                         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-4">
@@ -60,27 +65,11 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label asp-for="JoiningDate" class="control-label"></label>
-                        <input asp-for="JoiningDate" type="date" class="form-control" />
+                        <input asp-for="JoiningDate" type="date" class="form-control"
+                               data-val="true"
+                               data-val-eighteen="Employee must be 18 or older at the time of joining."
+                               data-val-eighteen-dobfield="DateOfBirth" />
                         <span asp-validation-for="JoiningDate" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="BasicSalary" class="control-label"></label>
-                        <input asp-for="BasicSalary" class="form-control" />
-                        <span asp-validation-for="BasicSalary" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="EmploymentType" class="control-label"></label>
-                        <select asp-for="EmploymentType" class="form-control">
-                            <option>Full-Time</option>
-                            <option>Part-Time</option>
-                            <option>Contract</option>
-                        </select>
-                        <span asp-validation-for="EmploymentType" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="BankAccountNumber" class="control-label"></label>
-                        <input asp-for="BankAccountNumber" class="form-control" />
-                        <span asp-validation-for="BankAccountNumber" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
                         <label asp-for="ShiftId" class="control-label"></label>
@@ -100,6 +89,56 @@
                             <option value="Inactive">Inactive</option>
                         </select>
                         <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="BasicSalary" class="control-label"></label>
+                        <input asp-for="BasicSalary" class="form-control" />
+                        <span asp-validation-for="BasicSalary" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="EmploymentType" class="control-label"></label>
+                        <select asp-for="EmploymentType" class="form-control">
+                            <option>Full-Time</option>
+                            <option>Part-Time</option>
+                            <option>Contract</option>
+                        </select>
+                        <span asp-validation-for="EmploymentType" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group col-md-4">
+                        <label asp-for="PaymentSystem" class="control-label"></label>
+                        <select asp-for="PaymentSystem" class="form-control" id="paymentSystemSelect">
+                            <option value="">-- Select Payment System --</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Mobile Banking">Mobile Banking</option>
+                            <option value="Cash Payment">Cash Payment</option>
+                        </select>
+                        <span asp-validation-for="PaymentSystem" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-8"></div>
+                    <div class="row col-12 payment-field-group" id="bankTransferFields" style="display:none;">
+                        <div class="form-group col-md-4">
+                            <label asp-for="AccountHolderName" class="control-label"></label>
+                            <input asp-for="AccountHolderName" class="form-control" />
+                            <span asp-validation-for="AccountHolderName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label asp-for="BankAndBranchName" class="control-label"></label>
+                            <input asp-for="BankAndBranchName" class="form-control" />
+                            <span asp-validation-for="BankAndBranchName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label asp-for="BankAccountNumber" class="control-label"></label>
+                            <input asp-for="BankAccountNumber" class="form-control" />
+                            <span asp-validation-for="BankAccountNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row col-12 payment-field-group" id="mobileBankingFields" style="display:none;">
+                        <div class="form-group col-md-4">
+                            <label asp-for="MobileNumber" class="control-label"></label>
+                            <input asp-for="MobileNumber" class="form-control" />
+                            <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="text-right">
@@ -121,12 +160,109 @@
                 window.__AntiForgeryToken = tokenInput.value;
             }
 
+            // --- 1. AGE CALCULATION (Using your logic) ---
+
+            function updateCurrentAge() {
+                // Get value from the ASP.NET-generated ID
+                const dobString = $('#DateOfBirth').val();
+                if (!dobString) {
+                    $('#ageDisplay').text('--'); // Update the display span
+                    return;
+                }
+
+                const dob = new Date(dobString);
+                const today = new Date();
+                let age = today.getFullYear() - dob.getFullYear();
+                const monthDiff = today.getMonth() - dob.getMonth();
+
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                    age--;
+                }
+
+                // Update the display span we added to the HTML
+                const ageText = (age < 0 || isNaN(age)) ? '--' : age + ' yrs';
+                $('#ageDisplay').text(ageText);
+            }
+
+            // Attach the event listener to the DOB input
+            $('#DateOfBirth').on('change', updateCurrentAge);
+
+            // Run on page load for "Edit" mode to show existing age
+            updateCurrentAge();
+
+
+            // --- 2. JOINING DATE VALIDATION (Using your logic) ---
+
+            // 2a. Add the custom validation method to jQuery Validator
+            $.validator.addMethod("eighteenOrOlder", function (value, element, params) {
+                // 'value' is the JoiningDate (from 'element')
+                // 'params' is the selector for the DateOfBirth input
+                const dobString = $(params).val();
+                const joiningDateString = value;
+
+                // Don't validate if either is empty; [Required] will catch it
+                if (!dobString || !joiningDateString) {
+                    return true;
+                }
+
+                // Your validation logic:
+                const dob = new Date(dobString);
+                const joining = new Date(joiningDateString);
+
+                let ageAtJoining = joining.getFullYear() - dob.getFullYear();
+                const monthDiff = joining.getMonth() - dob.getMonth();
+
+                if (monthDiff < 0 || (monthDiff === 0 && joining.getDate() < dob.getDate())) {
+                    ageAtJoining--;
+                }
+
+                // Return true if valid (18+), false if invalid
+                return ageAtJoining >= 18;
+            });
+
+            // 2b. Link this new method to 'unobtrusive' validation
+            // This connects our method to the 'data-val-eighteen' attribute
+            $.validator.unobtrusive.adapters.add(
+                'eighteen', ['dobfield'], function (options) {
+                    options.rules['eighteenOrOlder'] = '#' + options.params.dobfield;
+                    options.messages['eighteenOrOlder'] = options.message;
+                }
+            );
+
+        // --- 3. PAYMENT SYSTEM CONDITIONAL LOGIC ---
+        const $paymentSelect = $('#paymentSystemSelect');
+        const $bankFields = $('#bankTransferFields');
+        const $mobileFields = $('#mobileBankingFields');
+
+        function togglePaymentFields() {
+            const selectedSystem = $paymentSelect.val();
+
+            if (selectedSystem === 'Bank Transfer') {
+                $bankFields.show();
+                $mobileFields.hide();
+            } else if (selectedSystem === 'Mobile Banking') {
+                $bankFields.hide();
+                $mobileFields.show();
+            } else { // Cash Payment or -- Select --
+                $bankFields.hide();
+                $mobileFields.hide();
+            }
+        }
+
+        // Attach event handler
+        $paymentSelect.on('change', togglePaymentFields);
+
+        // Run on page load (for Edit mode) to set the correct state
+        togglePaymentFields();
+        // --- END OF PAYMENT LOGIC ---
+            // --- 4. AJAX FORM SUBMISSION ---
             $('#employeeForm').on('submit', function (e) {
                 e.preventDefault(); // Stop the normal (non-AJAX) form submit
 
                 var $form = $(this);
 
                 // Manually trigger client-side validation
+                // This will NOW include your "eighteenOrOlder" check
                 if (!$form.valid()) {
                     return; // Don't submit if validation fails
                 }
