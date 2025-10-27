@@ -1,11 +1,12 @@
-@model PayrollProject.ViewModel.EmployeeViewModels.EmployeeVM
+@using PayrollProject.ViewModel
+@model EmployeeVM
 @{
     ViewData["Title"] = ViewBag?.Title ?? "Employee";
     var shifts = ViewBag?.Shifts as IEnumerable<PayrollProject.DataModels.Shift> ?? Enumerable.Empty<PayrollProject.DataModels.Shift>();
     var formAction = ViewBag?.FormAction as string ?? Url.Action("Create", "Employee");
 }
 
-<div class="p-3">
+<div>
     <form id="employeeForm" method="post" action="@formAction">
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="EmployeeId" />

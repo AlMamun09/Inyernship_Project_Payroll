@@ -2,7 +2,7 @@
 using PayrollProject.Data;
 using PayrollProject.DataModels;
 using PayrollProject.Repositories.Interfaces;
-using PayrollProject.ViewModel.ShiftViewModels;
+using PayrollProject.ViewModel;
 namespace PayrollProject.Repositories
 {
     public class ShiftRepository : IShiftRepository

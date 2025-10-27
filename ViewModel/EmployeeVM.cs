@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace PayrollProject.ViewModel.EmployeeViewModels
+namespace PayrollProject.ViewModel
 {
     public class EmployeeVM
     {
@@ -68,7 +68,7 @@ namespace PayrollProject.ViewModel.EmployeeViewModels
         public string? ShiftName { get; set; }
 
         [Required(ErrorMessage = "Status is required.")]
-        public string? Status { get; set; } = PayrollProject.Models.PayrollEnums.EmploymentStatus.Active;
+        public string? Status { get; set; } = Models.PayrollEnums.EmploymentStatus.Active;
     }
 
 }

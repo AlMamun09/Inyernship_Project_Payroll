@@ -1,4 +1,4 @@
-﻿namespace PayrollProject.ViewModel.ShiftViewModels
+﻿namespace PayrollProject.ViewModel
 {
     public class ShiftVM
     {

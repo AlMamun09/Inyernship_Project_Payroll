@@ -1,5 +1,5 @@
 ﻿using PayrollProject.DataModels;
-using PayrollProject.ViewModel.AttendanceViewModels;
+using PayrollProject.ViewModel;
 namespace PayrollProject.Repositories.Interfaces
 {
     public interface IAttendanceRepository

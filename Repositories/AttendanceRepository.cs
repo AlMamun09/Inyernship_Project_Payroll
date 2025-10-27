@@ -2,7 +2,7 @@
 using PayrollProject.Data;
 using PayrollProject.DataModels;
 using PayrollProject.Repositories.Interfaces;
-using PayrollProject.ViewModel.AttendanceViewModels;
+using PayrollProject.ViewModel;
 namespace PayrollProject.Repositories
 {
     public class AttendanceRepository : IAttendanceRepository

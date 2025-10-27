@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PayrollProject.ViewModel.AttendanceViewModels
+namespace PayrollProject.ViewModel
 {
     public class AttendanceVM
     {

@@ -29,6 +29,8 @@ builder.Services.AddScoped<PayrollProject.Repositories.Interfaces.IEmployeeRepos
 builder.Services.AddScoped<PayrollProject.Repositories.Interfaces.IShiftRepository, PayrollProject.Repositories.ShiftRepository>();
 builder.Services.AddScoped<PayrollProject.Repositories.Interfaces.IAttendanceRepository, PayrollProject.Repositories.AttendanceRepository>();
 builder.Services.AddScoped<PayrollProject.Repositories.Interfaces.ILeaveRepository, PayrollProject.Repositories.LeaveRepository>();
+builder.Services.AddScoped<PayrollProject.Repositories.Interfaces.IDepartmentRepository, PayrollProject.Repositories.DepartmentRepository>();
+builder.Services.AddScoped<PayrollProject.Repositories.Interfaces.IDesignationRepository, PayrollProject.Repositories.DesignationRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
