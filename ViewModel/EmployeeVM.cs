@@ -26,10 +26,8 @@ namespace PayrollProject.ViewModel
         [Required(ErrorMessage = "Designation is required")]
         public string? Designation { get; set; }
 
-        [Required(ErrorMessage = "Department is required")]
         public Guid DepartmentId { get; set; }
 
-        [Required(ErrorMessage = "Department is required")]
         public string? Department { get; set; }
 
         [Required(ErrorMessage = "Joining Date is required")]
@@ -59,7 +57,6 @@ namespace PayrollProject.ViewModel
         [Phone] 
         public string? MobileNumber { get; set; }
 
-        [Required]
         [StringLength(50, ErrorMessage = "Bank Account Number cannot exceed 50 characters")]
         [Display(Name = "Bank Account Number")]
         public string? BankAccountNumber { get; set; }
