@@ -45,5 +45,11 @@ namespace PayrollProject.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<bool> DepartmentNameExistsAsync(string departmentName, Guid departmentId)
+        {
+            return await _context.Departments
+                .AnyAsync(d => d.DepartmentName == departmentName && d.DepartmentId != departmentId);
+        }
     }
 }

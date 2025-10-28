@@ -27,6 +27,9 @@ namespace PayrollProject.ViewModel
         public string? Designation { get; set; }
 
         [Required(ErrorMessage = "Department is required")]
+        public Guid DepartmentId { get; set; }
+
+        [Required(ErrorMessage = "Department is required")]
         public string? Department { get; set; }
 
         [Required(ErrorMessage = "Joining Date is required")]

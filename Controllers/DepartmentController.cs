@@ -55,6 +55,10 @@ namespace PayrollProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] DepartmentVM departmentVM)
         {
+            if (await _departmentRepository.DepartmentNameExistsAsync(departmentVM.DepartmentName!, Guid.Empty))
+            {
+                ModelState.AddModelError("DepartmentName", "Department name already exists.");
+            }
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(d => d.Errors).Select(e=>e.ErrorMessage).ToArray();
@@ -83,6 +87,10 @@ namespace PayrollProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromForm] DepartmentVM departmentVM)
         {
+            if (await _departmentRepository.DepartmentNameExistsAsync(departmentVM.DepartmentName!, departmentVM.DepartmentId))
+            {
+                ModelState.AddModelError("DepartmentName", "Department name already exists.");
+            }
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(d => d.Errors).Select(e => e.ErrorMessage).ToArray();
