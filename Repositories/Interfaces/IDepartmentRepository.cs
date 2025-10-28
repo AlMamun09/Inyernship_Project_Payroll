@@ -9,5 +9,6 @@ namespace PayrollProject.Repositories.Interfaces
         Task AddDepartmentAsync(Department department);
         Task UpdateDepartmentAsync(Department department);
         Task DeleteDepartmentAsync(Guid departmentId);
+        Task<bool> DepartmentNameExistsAsync (string departmentName, Guid departmentId);
     }
 }

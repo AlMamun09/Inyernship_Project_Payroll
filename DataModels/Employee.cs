@@ -15,7 +15,7 @@ namespace PayrollProject.DataModels
         public string? Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string? Designation { get; set; }
-        public string? Department { get; set; }
+        public Guid DepartmentId { get; set; }
         public DateTime JoiningDate { get; set; }
         public decimal BasicSalary { get; set; }
         public string? EmploymentType { get; set; }

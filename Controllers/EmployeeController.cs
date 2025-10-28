@@ -32,6 +32,7 @@ namespace PayrollProject.Controllers
             {
                 var employees = await _employeeRepository.GetAllEmployeesAsync();
                 var shifts = await _context.Shifts.ToDictionaryAsync(s => s.ShiftId, s => s.ShiftName);
+                var departments = await _context.Departments.ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
 
                 var employeeVMs = employees.Select(e => new EmployeeVM
                 {
@@ -39,7 +40,8 @@ namespace PayrollProject.Controllers
                     EmployeeCode = e.EmployeeCode,
                     FullName = e.FullName,
                     Designation = e.Designation,
-                    Department = e.Department,
+                    DepartmentId = e.DepartmentId,
+                    Department = departments.TryGetValue(e.DepartmentId, out var deptName) ? deptName : "N/A",
                     JoiningDate = e.JoiningDate,
                     Status = e.Status,
                     ShiftId = e.ShiftId,
@@ -63,6 +65,7 @@ namespace PayrollProject.Controllers
         public async Task<IActionResult> Create()
         {
             await PopulateShiftSelectList();
+            await PopulateDepartmentSelectList();
             ViewBag.Title = "Create Employee";
             ViewBag.FormAction = Url.Action("Create");
             return View("Create", new EmployeeVM());
@@ -105,6 +108,7 @@ namespace PayrollProject.Controllers
                 return NotFound();
 
             await PopulateShiftSelectList();
+            await PopulateDepartmentSelectList();
             ViewBag.Title = "Edit Employee";
             ViewBag.FormAction = Url.Action("Edit");
             var vm = MapToVM(employee);
@@ -130,7 +134,7 @@ namespace PayrollProject.Controllers
             existing.Gender = model.Gender;
             existing.DateOfBirth = model.DateOfBirth;
             existing.Designation = model.Designation;
-            existing.Department = model.Department;
+            existing.DepartmentId = model.DepartmentId;
             existing.JoiningDate = model.JoiningDate;
             existing.BasicSalary = model.BasicSalary;
             existing.EmploymentType = model.EmploymentType;
@@ -181,6 +185,12 @@ namespace PayrollProject.Controllers
             ViewBag.Shifts = shifts;
         }
 
+        private async Task PopulateDepartmentSelectList()
+        {
+            var departments = await _context.Departments.AsNoTracking().OrderBy(d => d.DepartmentName).ToListAsync();
+            ViewBag.Departments = departments;
+        }
+
         private static Employee MapToEntity(EmployeeVM vm)
         {
             return new Employee
@@ -191,7 +201,7 @@ namespace PayrollProject.Controllers
                 Gender = vm.Gender,
                 DateOfBirth = vm.DateOfBirth,
                 Designation = vm.Designation,
-                Department = vm.Department,
+                DepartmentId = vm.DepartmentId,
                 JoiningDate = vm.JoiningDate,
                 BasicSalary = vm.BasicSalary,
                 PaymentSystem = vm.PaymentSystem,
@@ -215,7 +225,7 @@ namespace PayrollProject.Controllers
                 Gender = e.Gender,
                 DateOfBirth = e.DateOfBirth,
                 Designation = e.Designation,
-                Department = e.Department,
+                DepartmentId = e.DepartmentId,
                 JoiningDate = e.JoiningDate,
                 BasicSalary = e.BasicSalary,
                 PaymentSystem = e.PaymentSystem,
